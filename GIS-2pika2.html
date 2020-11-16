@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Detyra nr2 Pika 2</title>
+    <style>
+        /* Dimensionet e hartes: */
+        #map {
+            width: 700px;
+            height: 500px;
+        }
+    </style>
+	
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqRQUzG8s_7YAqkbG7nxTRD41eul1dMwA&callback=initMap">
+    </script>
+  </head>
+
+  <body>
+
+   <div id="map"></div>
+   
+    <script>
+
+var polygon;
+var count=0;
+var map ;                                        
+  function initMap() {
+  
+            // Inicializimi i qendres se hartes me kordinatat e specifikuara ne kerkesen e detyres
+            var qender = { lat: 41.3275, lng: 19.8187 };
+
+            // Krijimi i hartes me te dhenat e specifikuara/
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: qender,
+                zoom: 13,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+			    disableDoubleClickZoom: true
+            });
+			
+ // Inicializon dhe shton ne harte marker-in dhe infoWindow-n per piken e nisjes
+    var marker = new google.maps.Marker({  
+	    position: new google.maps.LatLng(41.3275, 19.8187)	
+	  });
+	  marker.setMap(map);  
+    var infoWindow = new google.maps.InfoWindow({ 
+		 content: "PIKA E NISJES"  });
+         infoWindow.open(map, marker);
+		 
+// path-i mban koordinaten e nisjen dhe koordinatat e pikave te polygonit qe do klikohen ne harte. 		 
+   var path=[new google.maps.LatLng(41.3275, 19.8187)];
+	  polygon= new google.maps.Polygon({
+		  fillcolor: 'blue',
+		  path:path,
+		  map:map
+	  });
+  google.maps.event.addListener(map,'dblclick',krijo); // Ne double click therritet funksioni krijo 
+  }
+  
+		  function krijo(event)
+		  { //shton ne path latlng e klikuara per polygonin
+			  count++;
+			  var path=polygon.getPath();
+			  if(count<5) // Kontrolli nese pathi permban me pak se 5 objekte
+			  {
+			   path.push(event.latLng);
+				var marker = new google.maps.Marker({
+				position: event.latLng,
+				map: map});
+			  }
+		  else 
+		  { // Ne momentin qe klikohet pika e 6, hiqet nisja dhe shtohet pika e re.
+			path.removeAt(0);
+			path.push(event.latLng);
+			var marker = new google.maps.Marker({
+			position: event.latLng,
+			map: map});
+		  }
+		 }
+  
+  
+  google.maps.event.addDomListener(window, 'load', initMap);
+
+    </script>
+  </body>
+</html>

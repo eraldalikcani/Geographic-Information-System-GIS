@@ -1,5 +1,6 @@
 # gis
 1
+        
         1. Integroni ne nje faqe web, harten e google(GoogleMap) me dimensione 700px me 500px, 
         qender koordinaten(41.3275, 19.8187), shkalle 15, pamje te rrjetit rrugor.
 
@@ -9,6 +10,7 @@
         per te shfaqur ne harte pikat e klikuara. Shtoni mbi çdo simbol, nje infowindow me te dhenat lat,lng te koordinates.
 
 2
+        
         1. Nisuni nga objekti marker(i krijuar ne Detyren nr.1), ndertoni me ane te klikimeve ne harte rrugen 
         qe ju con drejt pikes destinacion. Destinacioni eshte nje vendodhje, e percaktuar nga ju, e ndryshme nga e para. 
         Shembull, koordinatat: 41.33,19.82. Duke perdorur objektin Polyline vizualizoni rrugen e formuar klikim pas klikimi. 

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Detyra nr1</title>
+    <style>
+        /* Dimensionet e hartes: */
+        #map {
+            width: 700px;
+            height: 500px;
+        }
+    </style>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqRQUzG8s_7YAqkbG7nxTRD41eul1dMwA&callback=initMap">
+        </script>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script>
+
+        var map;
+        var infoWindow;
+
+        function initMap() {
+            // inicializimi i qendres se hartes me kordinatat e specifikuara ne kerkesen e detyres
+            var qender = { lat: 41.3316924, lng: 18.6971471 };
+
+
+            // Krijimi i hartes me te dhenat e specifikuara/
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: qender,
+                zoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+            });
+
+            //Indentifikimi i qendres se hartes me titull 'Tirana' nepermnjet shenjuesit(Marker):
+            var tirana = { lat: 41.3275, lng: 19.8187 };
+            var markTirana = new google.maps.Marker({
+                position: tirana,
+                map: map,
+                title: 'Tirana'
+            });
+
+            //Shtimi i degjuesit te ngjarjeve te klikimit ne harte
+            google.maps.event.addListener(map, 'click', function (event) {
+                //Funksion i cili merr si parameter kordinatat e pikes ku kemi klikuar ne harte dhe vendos ne to 
+                // shenjuesin marker me simbolin BACKWARD_CLOSED_ARROW te klases SymbolPath.
+                placeMarker(event.latLng);
+
+            });
+
+        }
+
+        function placeMarker(location) {
+
+            var marker = new google.maps.Marker({
+
+                position: location,
+
+                icon: {
+                    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                    scale: 6,
+                    strokeWeight: 2,
+                    strokeColor: "#B60400",
+                },
+
+                map: map,
+
+            });
+            //Info window me te dhenat lat,lng te kordinates se zones se klikuar
+            infowindow = new google.maps.InfoWindow({
+
+                content: 'Latitude: ' + location.lat() + '<br>Longitude: ' + location.lng()
+
+            });
+            infowindow.open(map, marker);
+
+        }
+
+    </script>
+</body>
+
+</html>

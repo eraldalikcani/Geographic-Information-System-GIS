@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Detyra nr2 Pikat 1,3,4</title>
+    <style>
+        /* Dimensionet e hartes: */
+        #map {
+            width: 700px;
+            height: 500px;
+        }
+    </style>
+	
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqRQUzG8s_7YAqkbG7nxTRD41eul1dMwA&callback=initMap">
+    </script>
+  </head>
+  <body>
+   <div id="map"></div>
+   
+    <script>
+  var poly;
+  var map; 
+  var marker1,marker2; // markerat per piken e nisjes dhe destinacionin
+  var path;    // mban koordinatat per rrugen e polyline-it
+  var count=0; // flag per perfundimin e polyline-it
+  var nrRratheve=0; // mban numrin e klikimeve ne harte per te llogaritur rrezen e rrethit
+  
+  // Inicializimi i hartes
+  function initMap() 
+  {
+            // Inicializimi i qendres se hartes me kordinatat e specifikuara ne kerkesen e detyres
+            var qender = { lat: 41.3275, lng: 19.8187 };
+
+            // Krijimi i hartes me te dhenat e specifikuara/
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: qender,
+                zoom: 13,
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+            });
+
+
+			// Inicializon dhe shton ne harte marker-in dhe infoWindow-n per piken e nisjes
+			marker1 = new google.maps.Marker({  
+				position: new google.maps.LatLng(41.3275, 19.8187)	
+			  });
+			marker1.setMap(map);  
+			var infoWindow1 = new google.maps.InfoWindow({ 
+				 content: "PIKA E NISJES"  });
+				 infoWindow1.open(map, marker1);
+	 
+			// Inicializon dhe shton ne harte marker-in dhe infoWindow-n e destinacionit	 
+			marker2 = new google.maps.Marker({  
+				position: new google.maps.LatLng(41.3505, 19.8565)	
+			  });
+			marker2.setMap(map);  
+			var infoWindow2 = new google.maps.InfoWindow({ 
+				 content: "DESTINACIONI" });
+				 infoWindow2.open(map, marker2);
+			google.maps.event.addListener(marker2, 'click', shtodestinacion);
+			
+	  
+    // path-i mban koordinaten e nisjen dhe koordinatat e pikave te polyline-it qe do klikohen ne harte. 
+	path= [new google.maps.LatLng(41.3275, 19.8187)];
+	
+    // Krijon polyline-in me te dhenat e specifikuara
+	poly = new google.maps.Polyline({
+		path: path,
+		strokeColor: 'yellow',
+		strokeWeight: 1.5
+	});
+	poly.setMap(map); 
+
+    google.maps.event.addListener(map, 'click', addLatLng); // Ne cdo klikim therritet funksioni addLatLng
+	
+ }
+ 
+ 	// Ne klikim te destinacionit nuk shtohen me latlng ne path.
+	function shtodestinacion()
+	{
+		count++; // count-i sherben si flag per te sinjalizuar perfundimin e pathi-t. Kur count = 1, Ne klikim te hartes krijohet objekti Rectangle.
+		path = poly.getPath();
+		path.push(new google.maps.LatLng(41.3505, 19.8565)); //Shton destinacionin ne path
+		var marker = new google.maps.Marker({
+			position: event.latLng,
+			map: map
+		});
+	}
+ 
+	
+	// Merr latlng e klikuar qe do sherbeje per krijimin e polyline-it dhe per qendrat e rratheve. Ne perfundim te polyline-it, krijohet Rectangle.
+	function addLatLng(event) 
+	{
+		if(count==0) //Perderisa count = 0, do te mund te klikohen ne harte dhe te shtohen pika te reja ne path-in e  polyline-it
+		{ 
+			path = poly.getPath();
+			path.push(event.latLng); 
+
+		   nrRratheve++;
+		   var a = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()); // Merr qendren e rrethit
+		   // Krijimi i rratheve
+		   var rrathet = new google.maps.Circle({
+		   center:a,
+		   radius:200*nrRratheve,
+		   strokeColor:"red",  
+		   strokeOpacity:0.8,
+		   strokeWeight:2,
+		   fillColor:"blue",  
+		   fillOpacity:0.4   });
+	 
+    	 rrathet.setMap(map);
+			
+			
+		}
+		
+		// Ne perfundim te rruges Nisje-Destinacion, ne klikim te hartes, krijohet objekti Rectangle sipas kerkesave te specifikuara
+		if(count==1) //Perderisa count = 1, do te thote qe eshte klikuar pika Destinacion dhe nuk mund te shtohen me pika te reja ne path-in e polyline-it
+		{
+		   // Kulmet SE dhe SW te Rectangle duke perdorur skajet e polyline-it
+	        var bounds=new google.maps.LatLngBounds(
+					new google.maps.LatLng(41.3275, 19.8187),
+					new google.maps.LatLng(41.3505, 19.8565)
+				  );
+				  
+			var rectangle = new google.maps.Rectangle({
+				  strokeColor: '#FF0000',
+				  strokeWeight: 1,
+				  map: map,
+				  bounds: bounds
+				  });
+		}
+	}
+
+	google.maps.event.addDomListener(window, 'load', initMap);
+    </script>
+  </body>
+</html>
